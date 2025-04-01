@@ -1,0 +1,210 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "Prudential Claim Submission (Updated for Outpatient)",
+    "description": "Schema for submitting a claim to Prudential, supports outpatient and hospitalisation types.",
+    "type": "object",
+    "properties": {
+      "clientId": {
+        "type": "string",
+        "description": "Unique identifier for the client (e.g., 'C111')."
+      },
+      "lifeAssured": {
+        "type": "string",
+        "description": "Identifier for the life assured (policy holder)."
+      },
+      "claimType": {
+        "type": "string",
+        "enum": ["HOSPITALISATION", "OUTPATIENT"],
+        "description": "Type of claim (e.g., 'OUTPATIENT')."
+      },
+      "policyId": {
+        "type": "string",
+        "description": "Policy identifier (e.g., 'policy123')."
+      },
+      "details": {
+        "type": "object",
+        "description": "Additional claim details (hospital name, final amount, etc.).",
+        "properties": {
+          "hospitalName": {
+            "type": "string",
+            "description": "Name of the hospital (replaces 'hospitalId')."
+          },
+          "claimingFromOtherInsurers": {
+            "type": "boolean",
+            "description": "Whether the claimant is also submitting to other insurers."
+          },
+          "finalAmount": {
+            "type": "number",
+            "description": "The final claimed amount for this incident."
+          }
+        },
+        "required": [
+          "hospitalName",
+          "finalAmount"
+        ]
+      },
+      "receipts": {
+        "type": "array",
+        "description": "List of receipts associated with the claim.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "number": {
+              "type": "string",
+              "description": "Receipt number."
+            },
+            "receiptDate": {
+              "type": "string",
+              "format": "date",
+              "description": "Date the receipt was issued (YYYY-MM-DD)."
+            },
+            "hospitalName": {
+              "type": "string",
+              "description": "Name of the hospital as indicated on the receipt."
+            },
+            "currency": {
+              "type": "object",
+              "description": "Currency details for the receipt amount.",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Currency code (e.g., 'MYR')."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Currency name (e.g., 'Malaysian Ringgit')."
+                },
+                "symbol": {
+                  "type": "string",
+                  "description": "Currency symbol (e.g., 'RM')."
+                }
+              },
+              "required": ["code", "name", "symbol"]
+            },
+            "amount": {
+              "type": "number",
+              "description": "Monetary amount on this receipt."
+            },
+            "documents": {
+              "type": "array",
+              "description": "Documents associated with this receipt.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "RECEIPT",
+                      "MEDICAL_REPORT",
+                      "SPECIALIST_REPORT",
+                      "HOSPITAL_BILL",
+                      "OTHERS"
+                    ],
+                    "description": "Document type (must match the ClaimDocumentType enum)."
+                  },
+                  "id": {
+                    "type": "string",
+                    "description": "Document identifier (e.g., 'doc123')."
+                  }
+                },
+                "required": ["type", "id"]
+              }
+            }
+          },
+          "required": [
+            "number",
+            "receiptDate",
+            "hospitalName",
+            "currency",
+            "amount"
+          ]
+        }
+      },
+      "documents": {
+        "type": "array",
+        "description": "Additional documents for the claim.",
+        "items": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "enum": [
+                "RECEIPT",
+                "MEDICAL_REPORT",
+                "SPECIALIST_REPORT",
+                "HOSPITAL_BILL",
+                "OTHERS"
+              ],
+              "description": "Document type (from ClaimDocumentType)."
+            },
+            "id": {
+              "type": "string",
+              "description": "Unique document identifier (e.g., 'doc456')."
+            }
+          },
+          "required": ["type", "id"]
+        }
+      },
+      "payout": {
+        "type": "object",
+        "description": "Information about how the payout should be processed.",
+        "properties": {
+          "mode": {
+            "type": "string",
+            "description": "Payout mode (e.g., 'DIRECT_CREDIT')."
+          },
+          "currency": {
+            "type": "object",
+            "description": "Currency details for the payout.",
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Currency code (e.g., 'USD')."
+              },
+              "name": {
+                "type": "string",
+                "description": "Currency name (e.g., 'United States Dollar')."
+              },
+              "symbol": {
+                "type": "string",
+                "description": "Currency symbol (e.g., '$')."
+              }
+            },
+            "required": ["code", "name", "symbol"]
+          },
+          "account": {
+            "type": "object",
+            "description": "Bank account details for the payout.",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Bank name (e.g., 'Standard Chartered Bank')."
+              },
+              "holder": {
+                "type": "string",
+                "description": "Account holder's name."
+              },
+              "branch_code": {
+                "type": "string",
+                "description": "Branch code of the bank."
+              },
+              "account_no": {
+                "type": "string",
+                "description": "Bank account number."
+              }
+            },
+            "required": ["name", "holder", "branch_code", "account_no"]
+          }
+        },
+        "required": ["mode", "currency", "account"]
+      }
+    },
+    "required": [
+      "clientId",
+      "lifeAssured",
+      "claimType",
+      "policyId",
+      "details",
+      "payout"
+    ]
+  }

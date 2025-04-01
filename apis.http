@@ -1,0 +1,28 @@
+@API-Key=5a3c006e-11f8-4e6e-9466-7affa94ba17c
+@LBU=COE
+
+### Client Profile 
+
+GET https://domain-services.agreeablewater-b30d4436.southeastasia.azurecontainerapps.io/policy/v1/policies/eligible/health?client_id=C111
+Content-Type: application/json
+Lbu-Header: COE
+X-API-Key: {{API-Key}}
+
+### Currencies
+GET https://domain-services.agreeablewater-b30d4436.southeastasia.azurecontainerapps.io/claim/v1/currencies
+Lbu-Header: COE
+X-API-Key: {{API-Key}}
+
+### Payout Methods
+
+GET https://domain-services.agreeablewater-b30d4436.southeastasia.azurecontainerapps.io/policy/P111111/payouts/methods?transaction_type=CLAIM
+Lbu-Header: {{LBU}}
+X-API-Key: {{API-Key}}
+
+### Claim Document Checklist
+
+GET https://domain-services.agreeablewater-b30d4436.southeastasia.azurecontainerapps.io/claim/v1/claim-documents/checklist?claim_type=HOSPITALISATION
+Lbu-Header: {{LBU}}
+X-API-Key: {{API-Key}}
+
+
