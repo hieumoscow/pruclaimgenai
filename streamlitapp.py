@@ -321,7 +321,7 @@ def process_receipts(uploaded_files):
             
             # Display receipt information
             with st.expander(f"Receipt {successful_receipts + 1}"):
-                st.markdown(result.md_content)
+                st.markdown(result.md_content, unsafe_allow_html=True)
             
             successful_receipts += 1
         else:
@@ -533,9 +533,7 @@ def main():
                 st.button("Analyze Claim", on_click=lambda: st.session_state.update({"analyze_clicked": True}))
         
         # Analyze claim if receipts are processed and analyze button is clicked
-        if st.session_state.receipts_processed and st.session_state.get("analyze_clicked", False):
-            st.header("Claim Analysis")
-            
+        if st.session_state.receipts_processed and st.session_state.get("analyze_clicked", False):            
             # Create a message for the assistant with all the data
             # Convert Pydantic models to dict
             policies_data = [policy.model_dump() for policy in st.session_state.client_profile.policies]
